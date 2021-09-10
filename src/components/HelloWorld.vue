@@ -4,6 +4,7 @@
 
     <h2> {{ subTitle }} : {{ age }} </h2>
     <h2 v-if="age>30?true:false"> You are old </h2>
+    <h2> {{ doubleAge }} </h2>
 
     <button @click="addAge"> add age </button>
     <button v-on:click="resetAge"> resetAge </button> <br>
@@ -20,29 +21,19 @@
 
     <h3> Test v-for in array </h3>
 
-    <ul v-for="i in myArr">
-      <li> {{ i }} </li>
-    </ul>
-
-    <h3> Select in object (value, key, index) </h3>
-    <ul v-for="(value, key, index) in myObj">
-      <li> {{value}}, {{key}}, {{index}} </li>
-    </ul>
-
-
-    
-
-    <!-- <img :src="myImg" alt=""> -->
-
-
-
-
+    <Mycomp :testProp="testProp"/>
 
   </div>
 </template>
 
 <script>
+import Mycomp from './Mycomp'
+
 export default {
+  components: {
+    Mycomp
+  },
+
   name: 'HelloWorld',
 
   data () {
@@ -56,12 +47,15 @@ export default {
       x: 10,
       y: 20,
       z: 20
-    }
+      },
+    testProp: ['A','B','C','D']
     }
   },
   
+  // always change when template is render.
   methods: {
     addAge: function() {
+      console.log('methods')
       this.age++;
     },
     resetAge: function() {
@@ -70,6 +64,26 @@ export default {
     readAge: function(input) {
       input.preventDefault();
       this.age = input.target.value;
+    }
+  },
+
+  // for specifice value change only when change
+  // low power
+  computed: {
+    doubleAge: function() {
+      console.log('computed')
+      return this.age*2
+    }
+  },
+
+  // async function
+  // working only when value is change
+  watch: {
+    age: function () {
+      var self = this
+      setTimeout(function() {
+        self.age = 0
+      },2000)
     }
   },
 
